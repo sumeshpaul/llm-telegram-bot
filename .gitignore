@@ -31,3 +31,30 @@ wandb
 /docker-compose.yml
 /Dockerfile
 .env
+
+# === LLM & Telegram Bot Specific ===
+
+# Local LLM files and models
+*.gguf
+/mnt/mymodels/
+
+# Python environment folders
+/venv/
+/telegram-env/
+/__pycache__/
+/*.pyc
+
+# Environment & secret config
+.env
+.env.*
+
+# Logs
+*.log
+
+# Systemd service files (optional backup exclusion)
+*.service
+
+# Misc
+*.sqlite3
+*.db
+*.pid

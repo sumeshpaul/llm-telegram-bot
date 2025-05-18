@@ -39,3 +39,4 @@ lora_model_backup*
 backup_*.sh
 start_combined_backup_*.py
 bnb/
+cudnn-linux-x86_64-8.9.7.29_cuda12-archive.tar.xz

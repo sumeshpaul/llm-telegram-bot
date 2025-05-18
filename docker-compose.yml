@@ -1,10 +1,12 @@
-version: "3.9"
-
 services:
   lora-llm:
     build:
       context: .
-      dockerfile: Dockerfile  # ✅ Corrected name
+      dockerfile: Dockerfile
+
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
 
     image: torch-cuda-2.8
     container_name: lora-combined
@@ -14,6 +16,7 @@ services:
 
     env_file:
       - .env
+
     environment:
       - MODE=serve
       - NVIDIA_VISIBLE_DEVICES=all
@@ -27,7 +30,7 @@ services:
       - ./vectorize_and_index.py:/app/vectorize_and_index.py
       - ./utils:/app/utils
       - ./final_lora_model_v2:/app/final_lora_model_v2
-      - ./data:/app/data  # ✅ Replaced query_logs.db mount
+      - ./data:/app/data
       - ./rag_data:/app/rag_data
       - ./requirements.txt:/app/requirements.txt
       - /mnt/ssd2tb/huggingface:/root/.cache/huggingface

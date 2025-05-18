@@ -1,9 +1,6 @@
 # Base Image
 FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
 
-# Fix DNS resolution inside Fly.io builder
-RUN echo "nameserver 1.1.1.1" > /etc/resolv.conf
-
 # Metadata
 LABEL maintainer="sumesh@meledath.me"
 
@@ -54,7 +51,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
         sentence-transformers \
         tiktoken
 
-# Torch from source (optional, pinned to RTX 5080 arch)
+# Torch from NAS (validate MIME type and rename)
 ENV USE_CUDA=1 \
     USE_CUDNN=1 \
     USE_MKLDNN=1 \
@@ -62,7 +59,6 @@ ENV USE_CUDA=1 \
     MAX_JOBS=16 \
     TORCH_CUDA_ARCH_LIST="8.9+PTX;9.0;12.0"
 
-# Download Torch + cuDNN from Cloudflare Tunnel
 RUN wget -O /tmp/torch.whl http://files-public.desknav.ai/llm/torch.whl && \
     MIME_TYPE=$(file -b --mime-type /tmp/torch.whl) && \
     echo "Downloaded torch.whl - MIME type: $MIME_TYPE" && \
@@ -70,11 +66,15 @@ RUN wget -O /tmp/torch.whl http://files-public.desknav.ai/llm/torch.whl && \
     mv /tmp/torch.whl /tmp/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl && \
     pip install --no-deps /tmp/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl
 
+# cuDNN from NAS
 RUN wget -q -O /tmp/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz && \
     tar -xf /tmp/cudnn.tar.xz -C /tmp && \
-    CUDNN_DIR=$(find /tmp -type d -name "cudnn-linux-x86_64*" | head -n 1) && \
-    cp -P "$CUDNN_DIR/include/"* /usr/include/ && \
-    cp -P "$CUDNN_DIR/lib/"* /usr/lib/x86_64-linux-gnu/ && \
+    echo "📂 Listing /tmp after extraction:" && ls -l /tmp && \
+    CUDNN_INCLUDE=$(find /tmp -type d -name "include" | head -n 1) && \
+    CUDNN_LIB=$(find /tmp -type d -name "lib" | head -n 1) && \
+    if [ -z "$CUDNN_INCLUDE" ] || [ -z "$CUDNN_LIB" ]; then echo "❌ cudnn include/lib folders not found"; exit 1; fi && \
+    cp -P "$CUDNN_INCLUDE"/* /usr/include/ && \
+    cp -P "$CUDNN_LIB"/* /usr/lib/x86_64-linux-gnu/ && \
     echo "/usr/lib/x86_64-linux-gnu" > /etc/ld.so.conf.d/cudnn.conf && \
     ldconfig && \
     rm -rf /tmp/cudnn*

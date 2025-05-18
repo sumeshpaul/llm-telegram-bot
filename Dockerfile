@@ -45,7 +45,7 @@ RUN pip install \
         tiktoken
 
 # ✅ Download 5080-compatible PyTorch wheel from public URL
-RUN wget -O /tmp/torch.whl https://files-public.desknav.ai/llm/torch-latest.whl && \
+RUN wget -O /tmp/torch.whl https://files-public.desknav.ai/llm/torch-final-5080.whl && \
     pip install --no-deps /tmp/torch.whl
 
 # ✅ Download cuDNN tarball securely over HTTPS

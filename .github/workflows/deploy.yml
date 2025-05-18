@@ -20,7 +20,7 @@ jobs:
       - name: 🌐 Download torch + cudnn from files-public.desknav.ai
         run: |
           echo "⬇️ Downloading PyTorch wheel..."
-          wget -O llm/torch.whl https://files-public.desknav.ai/llm/torch-2.8.0a0-5080-compatible.whl
+          wget -O llm/torch.whl https://files-public.desknav.ai/llm/torch.whl
 
           echo "⬇️ Downloading cuDNN tarball..."
           wget -O llm/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn.tar.xz

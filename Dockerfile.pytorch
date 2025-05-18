@@ -58,9 +58,13 @@ ENV USE_CUDA=1 \
 RUN wget -O /tmp/torch.whl https://files.desknav.ai/llm/torch.whl && \
     pip install /tmp/torch.whl
 
-RUN wget -O /tmp/cudnn.tar.xz https://files.desknav.ai/llm/cudnn.tar.xz && \
-    tar -xvf /tmp/cudnn.tar.xz -C /usr/local --strip-components=1 && \
-    ldconfig
+RUN wget -q -O /tmp/cudnn.tar.xz https://files.desknav.ai/llm/cudnn.tar.xz && \
+    tar -xf /tmp/cudnn.tar.xz -C /tmp && \
+    cp -P /tmp/cudnn-linux-x86_64-8.9.7.29_cuda12-archive/include/* /usr/include/ && \
+    cp -P /tmp/cudnn-linux-x86_64-8.9.7.29_cuda12-archive/lib/* /usr/lib/x86_64-linux-gnu/ && \
+    echo "/usr/lib/x86_64-linux-gnu" > /etc/ld.so.conf.d/cudnn.conf && \
+    ldconfig && \
+    rm -rf /tmp/cudnn*
 
 # Build bitsandbytes from source
 WORKDIR /opt

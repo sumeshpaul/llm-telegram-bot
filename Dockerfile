@@ -1,6 +1,9 @@
 # Base Image
 FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
 
+# Fix DNS resolution inside Fly.io builder
+RUN echo "nameserver 1.1.1.1" > /etc/resolv.conf
+
 # Metadata
 LABEL maintainer="sumesh@meledath.me"
 

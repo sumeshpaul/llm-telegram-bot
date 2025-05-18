@@ -17,18 +17,18 @@ jobs:
       - name: 📁 Create Download Directory
         run: mkdir -p llm
 
-      - name: 🌐 Download torch + cudnn from files.desknav.ai
+      - name: 🌐 Download torch + cudnn from files-public.desknav.ai
         run: |
           for i in {1..3}; do
             echo "Attempt $i: Downloading torch.whl..."
-            wget -q --show-progress -O llm/torch.whl https://files.desknav.ai/llm/torch.whl && break || echo "Retrying torch.whl download ($i/3)..."
+            wget -q --show-progress -O llm/torch.whl http://files-public.desknav.ai/llm/torch.whl && break || echo "Retrying torch.whl download ($i/3)..."
             sleep 5
           done
           test -f llm/torch.whl || { echo "❌ Failed to download torch.whl after 3 attempts"; exit 1; }
 
           for i in {1..3}; do
             echo "Attempt $i: Downloading cudnn.tar.xz..."
-            wget -q --show-progress -O llm/cudnn.tar.xz https://files.desknav.ai/llm/cudnn.tar.xz && break || echo "Retrying cudnn.tar.xz download ($i/3)..."
+            wget -q --show-progress -O llm/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz && break || echo "Retrying cudnn.tar.xz download ($i/3)..."
             sleep 5
           done
           test -f llm/cudnn.tar.xz || { echo "❌ Failed to download cudnn.tar.xz after 3 attempts"; exit 1; }

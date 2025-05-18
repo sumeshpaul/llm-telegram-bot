@@ -69,8 +69,9 @@ RUN wget -O /tmp/torch.whl http://files-public.desknav.ai/llm/torch.whl && \
 
 RUN wget -q -O /tmp/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz && \
     tar -xf /tmp/cudnn.tar.xz -C /tmp && \
-    cp -P /tmp/cudnn-linux-x86_64-8.9.7.29_cuda12-archive/include/* /usr/include/ && \
-    cp -P /tmp/cudnn-linux-x86_64-8.9.7.29_cuda12-archive/lib/* /usr/lib/x86_64-linux-gnu/ && \
+    CUDNN_DIR=$(find /tmp -type d -name "cudnn-linux-x86_64*" | head -n 1) && \
+    cp -P "$CUDNN_DIR/include/"* /usr/include/ && \
+    cp -P "$CUDNN_DIR/lib/"* /usr/lib/x86_64-linux-gnu/ && \
     echo "/usr/lib/x86_64-linux-gnu" > /etc/ld.so.conf.d/cudnn.conf && \
     ldconfig && \
     rm -rf /tmp/cudnn*

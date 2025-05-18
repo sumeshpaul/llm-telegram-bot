@@ -29,7 +29,7 @@ RUN apt-get update && \
         cuda-cudart-dev-12-8 \
         cuda-nvrtc-dev-12-8 \
         cuda-driver-dev-12-8 \
-        **file** && \
+        file && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100 && \
     ln -sf /usr/bin/python3.10 /usr/bin/python && \

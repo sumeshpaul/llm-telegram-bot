@@ -24,20 +24,18 @@ RUN apt-get update && \
         gcc-13 g++-13 \
         build-essential cmake \
         python3.10 python3.10-dev python3.10-venv python3-pip \
-        git wget curl sqlite3 libopenblas-dev ca-certificates && \
+        git wget curl sqlite3 libopenblas-dev ca-certificates file && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100 && \
     ln -sf /usr/bin/python3.10 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip && \
     rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip with cache mount
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip
+# Upgrade pip
+RUN pip install --upgrade pip
 
-# Install Python packages
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install \
+# Python packages
+RUN pip install \
         typing_extensions \
         pyyaml \
         langchain \
@@ -46,25 +44,20 @@ RUN --mount=type=cache,target=/root/.cache/pip \
         sentence-transformers \
         tiktoken
 
-# Torch from source (optional, pinned to RTX 5080 arch)
-ENV USE_CUDA=1 \
-    USE_CUDNN=1 \
-    USE_MKLDNN=1 \
-    USE_MKL=0 \
-    MAX_JOBS=16 \
-    TORCH_CUDA_ARCH_LIST="8.9+PTX;9.0;12.0"
+# ✅ Download prebuilt PyTorch and cuDNN from public link
+RUN wget -O /tmp/torch.whl http://files-public.desknav.ai/llm/torch-2.8.0a0-5080-compatible.whl && \
+    pip install --no-deps /tmp/torch.whl
 
-# Clone and build PyTorch
-WORKDIR /opt
-RUN git clone --recursive https://github.com/pytorch/pytorch.git
-WORKDIR /opt/pytorch
-RUN git checkout 08f5371 && \
-    git submodule sync && \
-    git submodule update --init --recursive
-RUN python setup.py bdist_wheel && \
-    pip install dist/*.whl
+RUN wget -O /tmp/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz && \
+    tar -xf /tmp/cudnn.tar.xz -C /tmp && \
+    CUDNN_DIR=$(find /tmp -type d -name "cudnn-linux-x86_64*" | head -n 1) && \
+    cp -P "$CUDNN_DIR/include/"* /usr/include/ && \
+    cp -P "$CUDNN_DIR/lib/"* /usr/lib/x86_64-linux-gnu/ && \
+    echo "/usr/lib/x86_64-linux-gnu" > /etc/ld.so.conf.d/cudnn.conf && \
+    ldconfig && \
+    rm -rf /tmp/cudnn*
 
-# Build bitsandbytes from source
+# bitsandbytes build
 WORKDIR /opt
 RUN git clone https://github.com/bitsandbytes-foundation/bitsandbytes.git bnb
 WORKDIR /opt/bnb
@@ -72,18 +65,15 @@ RUN cmake -DCOMPUTE_BACKEND=cuda -S . && \
     make -j$(nproc) && \
     pip install -e .
 
-# Copy application
+# Copy app
 COPY . /app
 WORKDIR /app
 
-# App requirements
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-cache-dir -r requirements.txt
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install pymupdf python-docx sentencepiece python-multipart
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install gradio
+# Install app dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install pymupdf python-docx sentencepiece python-multipart
+RUN pip install gradio
 
-# Final setup
+# Finalize
 RUN chmod +x /app/start.sh
 CMD ["bash", "./start.sh"]

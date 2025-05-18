@@ -48,7 +48,8 @@ RUN pip install \
 RUN wget -O /tmp/torch.whl https://files-public.desknav.ai/llm/torch-latest.whl && \
     pip install --no-deps /tmp/torch.whl
 
-RUN wget -O /tmp/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz && \
+# ✅ Download cuDNN tarball securely over HTTPS
+RUN wget -O /tmp/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn.tar.xz && \
     tar -xf /tmp/cudnn.tar.xz -C /tmp && \
     CUDNN_DIR=$(find /tmp -type d -name "cudnn-linux-x86_64*" | head -n 1) && \
     cp -P "$CUDNN_DIR/include/"* /usr/include/ && \

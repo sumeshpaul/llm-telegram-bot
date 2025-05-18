@@ -14,24 +14,28 @@ jobs:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
 
-      - name: 📁 Create directory for LLM dependencies
+      - name: 📁 Create directory for torch & cudnn
         run: mkdir -p llm
 
-      - name: 🌐 Download torch + cuDNN from desknav
+      - name: 🌐 Download torch + cudnn from files-public.desknav.ai
         run: |
           echo "⬇️ Downloading PyTorch wheel..."
-          wget -O llm/torch.whl http://files-public.desknav.ai/llm/torch-2.8.0a0-5080-compatible.whl
+          wget -O llm/torch.whl https://files-public.desknav.ai/llm/torch-2.8.0a0-5080-compatible.whl
 
           echo "⬇️ Downloading cuDNN tarball..."
-          wget -O llm/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz
+          wget -O llm/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn.tar.xz
 
-          echo "📂 Contents of llm/"
+          echo "✅ Files downloaded:"
           ls -lh llm/
 
-      - name: 🧰 Install Fly CLI
+      - name: 🛠️ Set up Fly CLI
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: 🚀 Deploy to Fly.io
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
         run: flyctl deploy --remote-only

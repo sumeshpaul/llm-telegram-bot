@@ -4,7 +4,8 @@ services:
   lora-llm:
     build:
       context: .
-      dockerfile: Dockerfile.pytorch
+      dockerfile: Dockerfile  # ✅ Corrected name
+
     image: torch-cuda-2.8
     container_name: lora-combined
     command: python3 start_combined.py
@@ -26,12 +27,11 @@ services:
       - ./vectorize_and_index.py:/app/vectorize_and_index.py
       - ./utils:/app/utils
       - ./final_lora_model_v2:/app/final_lora_model_v2
-      - ./data:/app/data
+      - ./data:/app/data  # ✅ Replaced query_logs.db mount
       - ./rag_data:/app/rag_data
       - ./requirements.txt:/app/requirements.txt
       - /mnt/ssd2tb/huggingface:/root/.cache/huggingface
       - /mnt/nas_llm:/mnt/nas_llm
-      - ./query_logs.db:/app/query_logs.db
 
     ports:
       - "8000:8000"
@@ -41,3 +41,9 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

@@ -39,3 +39,4 @@ jobs:
           GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
           API_KEY: ${{ secrets.API_KEY }}
         run: flyctl deploy --remote-only
+# Trigger test

@@ -7,33 +7,28 @@ on:
 
 jobs:
   deploy:
-    name: �� Build and Deploy to Fly.io
+    name: �� Build & Deploy to Fly.io
     runs-on: ubuntu-latest
 
     steps:
-      - name: ⬇️ Checkout Repository
+      - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
 
-      - name: 📁 Create Download Directory
+      - name: 📁 Create directory for LLM dependencies
         run: mkdir -p llm
 
-      - name: 🌐 Download torch + cudnn from files-public.desknav.ai
+      - name: 🌐 Download torch + cuDNN from desknav
         run: |
-          for i in {1..3}; do
-            echo "Attempt $i: Downloading torch.whl..."
-            wget -q --show-progress -O llm/torch.whl http://files-public.desknav.ai/llm/torch.whl && break || echo "Retrying torch.whl download ($i/3)..."
-            sleep 5
-          done
-          test -f llm/torch.whl || { echo "❌ Failed to download torch.whl after 3 attempts"; exit 1; }
+          echo "⬇️ Downloading PyTorch wheel..."
+          wget -O llm/torch.whl http://files-public.desknav.ai/llm/torch-2.8.0a0-5080-compatible.whl
 
-          for i in {1..3}; do
-            echo "Attempt $i: Downloading cudnn.tar.xz..."
-            wget -q --show-progress -O llm/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz && break || echo "Retrying cudnn.tar.xz download ($i/3)..."
-            sleep 5
-          done
-          test -f llm/cudnn.tar.xz || { echo "❌ Failed to download cudnn.tar.xz after 3 attempts"; exit 1; }
+          echo "⬇️ Downloading cuDNN tarball..."
+          wget -O llm/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz
 
-      - name: 🛠️ Set up Fly CLI
+          echo "📂 Contents of llm/"
+          ls -lh llm/
+
+      - name: 🧰 Install Fly CLI
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: 🚀 Deploy to Fly.io

@@ -44,7 +44,7 @@ RUN pip install \
         sentence-transformers \
         tiktoken
 
-# ✅ Download prebuilt PyTorch and cuDNN from public link
+# ✅ Download 5080-compatible PyTorch wheel from public URL
 RUN wget -O /tmp/torch.whl http://files-public.desknav.ai/llm/torch-2.8.0a0-5080-compatible.whl && \
     pip install --no-deps /tmp/torch.whl
 

@@ -54,11 +54,11 @@ ENV USE_CUDA=1 \
     MAX_JOBS=16 \
     TORCH_CUDA_ARCH_LIST="8.9+PTX;9.0;12.0"
 
-# Download Torch + cuDNN from your NAS-hosted file server
-RUN wget -O /tmp/torch.whl http://files.desknav.ai/llm/torch.whl && \
+# Download Torch + cuDNN securely from your NAS via Cloudflare tunnel
+RUN wget -O /tmp/torch.whl https://files.desknav.ai/llm/torch.whl && \
     pip install /tmp/torch.whl
 
-RUN wget -O /tmp/cudnn.tar.xz http://files.desknav.ai/llm/cudnn.tar.xz && \
+RUN wget -O /tmp/cudnn.tar.xz https://files.desknav.ai/llm/cudnn.tar.xz && \
     tar -xvf /tmp/cudnn.tar.xz -C /usr/local --strip-components=1 && \
     ldconfig
 

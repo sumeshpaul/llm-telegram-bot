@@ -61,7 +61,11 @@ ENV USE_CUDA=1 \
 
 # Download Torch + cuDNN from Cloudflare Tunnel
 RUN wget -O /tmp/torch.whl http://files-public.desknav.ai/llm/torch.whl && \
-    pip install --no-deps /tmp/torch.whl
+    MIME_TYPE=$(file -b --mime-type /tmp/torch.whl) && \
+    echo "Downloaded torch.whl - MIME type: $MIME_TYPE" && \
+    test "$MIME_TYPE" = "application/zip" && \
+    mv /tmp/torch.whl /tmp/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl && \
+    pip install --no-deps /tmp/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl
 
 RUN wget -q -O /tmp/cudnn.tar.xz http://files-public.desknav.ai/llm/cudnn.tar.xz && \
     tar -xf /tmp/cudnn.tar.xz -C /tmp && \

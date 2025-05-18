@@ -10,12 +10,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
     TOKENIZERS_PARALLELISM=false \
     MODE=serve \
     PATH="/venv/bin:$PATH" \
+    LD_LIBRARY_PATH="/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH" \
     CFLAGS="-mcmodel=large" \
     CXXFLAGS="-mcmodel=large" \
     LDFLAGS="-mcmodel=large" \
     TRANSFORMERS_CACHE=/app/.cache/huggingface
 
-# System + Python + GCC 13
+# System + Python + GCC 13 + CUDA libs
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
     add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
@@ -24,7 +25,11 @@ RUN apt-get update && \
         gcc-13 g++-13 \
         build-essential cmake \
         python3.10 python3.10-dev python3.10-venv python3-pip \
-        git wget curl sqlite3 libopenblas-dev ca-certificates && \
+        git wget curl sqlite3 libopenblas-dev ca-certificates \
+        cuda-cudart-dev-12-8 \
+        cuda-nvrtc-dev-12-8 \
+        cuda-driver-dev-12-8 \
+        cuda-libraries-dev-12-8 && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100 && \
     ln -sf /usr/bin/python3.10 /usr/bin/python && \

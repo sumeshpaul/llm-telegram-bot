@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  lora-llm:
+    build:
+      context: .
+      dockerfile: Dockerfile.pytorch
+    image: torch-cuda-2.8
+    container_name: lora-combined
+    command: python3 start_combined.py
+    restart: unless-stopped
+    working_dir: /app
+
+    env_file:
+      - .env
+    environment:
+      - MODE=serve
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TRANSFORMERS_CACHE=/root/.cache/huggingface
+      - HF_HOME=/root/.cache/huggingface
+
+    runtime: nvidia
+
+    volumes:
+      - ./start_combined.py:/app/start_combined.py
+      - ./vectorize_and_index.py:/app/vectorize_and_index.py
+      - ./utils:/app/utils
+      - ./final_lora_model_v2:/app/final_lora_model_v2
+      - ./data:/app/data
+      - ./rag_data:/app/rag_data
+      - ./requirements.txt:/app/requirements.txt
+      - /mnt/ssd2tb/huggingface:/root/.cache/huggingface
+      - /mnt/nas_llm:/mnt/nas_llm
+      - ./query_logs.db:/app/query_logs.db
+
+    ports:
+      - "8000:8000"
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]

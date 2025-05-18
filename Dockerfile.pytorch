@@ -1,0 +1,93 @@
+# Base Image
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+# Metadata
+LABEL maintainer="sumesh@meledath.me"
+
+# Core Environment
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+    TOKENIZERS_PARALLELISM=false \
+    MODE=serve \
+    PATH="/venv/bin:$PATH" \
+    CFLAGS="-mcmodel=large" \
+    CXXFLAGS="-mcmodel=large" \
+    LDFLAGS="-mcmodel=large" \
+    TRANSFORMERS_CACHE=/app/.cache/huggingface
+
+# System + Python + GCC 13
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
+    apt-get update && \
+    apt-get install -y \
+        gcc-13 g++-13 \
+        build-essential cmake \
+        python3.10 python3.10-dev python3.10-venv python3-pip \
+        git wget curl sqlite3 libopenblas-dev ca-certificates && \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100 && \
+    ln -sf /usr/bin/python3.10 /usr/bin/python && \
+    ln -sf /usr/bin/pip3 /usr/bin/pip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip with cache mount
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip
+
+# Install Python packages
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install \
+        typing_extensions \
+        pyyaml \
+        langchain \
+        langchain-community \
+        faiss-cpu \
+        sentence-transformers \
+        tiktoken
+
+# Torch from source (optional, pinned to RTX 5080 arch)
+ENV USE_CUDA=1 \
+    USE_CUDNN=1 \
+    USE_MKLDNN=1 \
+    USE_MKL=0 \
+    MAX_JOBS=16 \
+    TORCH_CUDA_ARCH_LIST="8.9+PTX;9.0;12.0"
+
+# Clone and build PyTorch
+WORKDIR /opt
+RUN git clone --recursive https://github.com/pytorch/pytorch.git
+WORKDIR /opt/pytorch
+RUN git checkout 08f5371 && \
+    git submodule sync && \
+    git submodule update --init --recursive
+RUN python setup.py bdist_wheel && \
+    pip install dist/*.whl
+
+# Build bitsandbytes from source
+WORKDIR /opt
+RUN git clone https://github.com/bitsandbytes-foundation/bitsandbytes.git bnb
+WORKDIR /opt/bnb
+RUN cmake -DCOMPUTE_BACKEND=cuda -S . && \
+    make -j$(nproc) && \
+    pip install -e .
+
+# Copy application
+COPY . /app
+WORKDIR /app
+
+# App requirements
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-cache-dir -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install pymupdf python-docx sentencepiece python-multipart
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install gradio
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install "huggingface_hub[hf_xet]"
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install psutil
+
+# Final setup
+RUN chmod +x /app/start.sh
+CMD ["bash", "./start.sh"]

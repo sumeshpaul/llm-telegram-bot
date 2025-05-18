@@ -1,0 +1,34 @@
+# Ignore compiled Python
+__pycache__/
+*.py[cod]
+
+# Common IDE junk
+.venv/
+.vscode/
+.idea/
+node_modules/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Model checkpoints (you want to mount these, not bake them)
+checkpoints/
+
+# Mount instead of bake
+backups/
+final_lora_model/
+rag_data/geology/faiss_index/   # RAG generated index, will be re-created or mounted
+
+# Logs & cache
+*.log
+*.sqlite
+.env
+output/
+.cache/
+*.tar
+*.tar.gz
+
+# Safe to exclude globally
+/root/.cache/

@@ -1,0 +1,13 @@
+FROM nvidia/cuda:12.3.2-devel-ubuntu22.04
+
+WORKDIR /app
+
+COPY . .
+
+RUN apt update && apt install -y python3.10 python3-pip git && \
+    pip3 install --upgrade pip && \
+    pip3 install -r requirements.txt
+
+ENV MODE=serve
+
+CMD ["python3", "start_combined.py"]

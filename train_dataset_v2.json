@@ -1,0 +1,72 @@
+[
+  {
+    "instruction": "Explain what photosynthesis is in simple terms.",
+    "input": null,
+    "output": "Photosynthesis is the process where plants use sunlight to make their own food from carbon dioxide and water."
+  },
+  {
+    "instruction": "Convert the following to JSON format.",
+    "input": "Name: Alice, Age: 25, Country: Canada",
+    "output": "{\"name\": \"Alice\", \"age\": 25, \"country\": \"Canada\"}"
+  },
+  {
+    "instruction": "Translate this to Arabic.",
+    "input": "Peace be upon you",
+    "output": "السلام عليكم"
+  },
+  {
+    "instruction": "Summarize the following news headline.",
+    "input": "UAE launches lunar rover mission to explore moon's surface.",
+    "output": "UAE begins mission to explore moon with lunar rover."
+  },
+  {
+    "instruction": "List three benefits of regular exercise.",
+    "input": null,
+    "output": "1. Improves cardiovascular health\n2. Boosts mood and energy levels\n3. Helps maintain a healthy weight"
+  },
+  {
+    "instruction": "Write a haiku about spring.",
+    "input": null,
+    "output": "Cherry blossoms bloom\nBreeze whispers across meadows\nHope wakes with sunrise"
+  },
+  {
+    "instruction": "Convert this date to ISO 8601 format.",
+    "input": "May 8, 2025",
+    "output": "2025-05-08"
+  },
+  {
+    "instruction": "Who is the president of the United States?",
+    "input": "",
+    "output": "As of July 2024, the President of the United States is Joe Biden."
+  },
+  {
+    "instruction": "What's the capital of France?",
+    "input": "",
+    "output": "The capital of France is Paris."
+  },
+  {
+    "instruction": "Where is Malaysia located?",
+    "input": null,
+    "output": "Malaysia is a Southeast Asian country located partly on a peninsula of the Asian mainland and partly on the northern third of the island of Borneo. It shares borders with Thailand, Indonesia, and Brunei, and has coastlines along the South China Sea."
+  },
+  {
+    "instruction": "What is EBITDA and why is it important in finance?",
+    "input": null,
+    "output": "EBITDA stands for Earnings Before Interest, Taxes, Depreciation, and Amortization. It's a key financial metric used to evaluate a company's operating performance. By excluding non-operating expenses and accounting decisions, EBITDA offers a clearer view of profitability from core operations."
+  },
+  {
+    "instruction": "Correct the following misconception: Egypt and Thailand share a border.",
+    "input": "",
+    "output": "Incorrect. Egypt and Thailand do not share a border. Egypt is in North Africa while Thailand is in Southeast Asia, separated by thousands of kilometers."
+  },
+  {
+    "instruction": "Format the following business summary as a structured bullet list.",
+    "input": "Tejara Capital is a DFSA-regulated firm in DIFC. It specializes in private placements, structured finance, and real asset investments.",
+    "output": "- **Name:** Tejara Capital\n- **Regulation:** DFSA-regulated\n- **Location:** DIFC, Dubai\n- **Focus Areas:**\n  - Private Placements\n  - Structured Finance\n  - Real Asset Investments"
+  },
+  {
+    "instruction": "What does RAG mean in AI workflows?",
+    "input": null,
+    "output": "RAG stands for Retrieval-Augmented Generation. It combines a retrieval system with a generative model to improve factual accuracy. The retriever fetches relevant documents based on the prompt, and the generator uses this context to produce more informed answers."
+  }
+]

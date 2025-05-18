@@ -19,8 +19,8 @@ jobs:
 
       - name: 🌐 Download torch + cudnn from files.desknav.ai
         run: |
-          wget -q -O llm/torch.whl http://files.desknav.ai/llm/torch.whl
-          wget -q -O llm/cudnn.tar.xz http://files.desknav.ai/llm/cudnn.tar.xz
+        wget -q -O llm/torch.whl https://files.desknav.ai/llm/torch.whl
+        wget -q -O llm/cudnn.tar.xz https://files.desknav.ai/llm/cudnn.tar.xz
 
       - name: 🛠️ Set up Fly CLI
         uses: superfly/flyctl-actions/setup-flyctl@master

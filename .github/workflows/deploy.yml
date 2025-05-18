@@ -33,6 +33,11 @@ jobs:
           done
           test -f llm/cudnn.tar.xz || { echo "❌ Failed to download cudnn.tar.xz after 3 attempts"; exit 1; }
 
+      - name: 📦 Upload wheel + cudnn to Docker build context
+        run: |
+          mv llm/torch.whl .
+          mv llm/cudnn.tar.xz .
+
       - name: 🛠️ Set up Fly CLI
         uses: superfly/flyctl-actions/setup-flyctl@master
 

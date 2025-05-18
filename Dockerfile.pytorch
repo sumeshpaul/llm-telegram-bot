@@ -54,15 +54,11 @@ ENV USE_CUDA=1 \
     MAX_JOBS=16 \
     TORCH_CUDA_ARCH_LIST="8.9+PTX;9.0;12.0"
 
-# Clone and build PyTorch
-WORKDIR /opt
-RUN git clone --recursive https://github.com/pytorch/pytorch.git
-WORKDIR /opt/pytorch
-RUN git checkout 08f5371 && \
-    git submodule sync && \
-    git submodule update --init --recursive
-RUN python setup.py bdist_wheel && \
-    pip install dist/*.whl
+# Torch + cuDNN from private server
+ADD http://files.desknav.ai/llm/torch.whl /tmp/torch.whl
+ADD http://files.desknav.ai/llm/cudnn.tar.xz /tmp/cudnn.tar.xz
+RUN pip install /tmp/torch.whl
+RUN tar -xvf /tmp/cudnn.tar.xz -C /usr/local --strip-components=1
 
 # Build bitsandbytes from source
 WORKDIR /opt

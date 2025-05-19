@@ -15,16 +15,8 @@ jobs:
       - name: 📁 Create directory for torch & cudnn
         run: mkdir -p llm
 
-      - name: 🌐 Download torch + cudnn from files-public.desknav.ai
-        run: |
-          echo "⬇️ Downloading PyTorch wheel..."
-          wget -O llm/torch.whl https://files-public.desknav.ai/llm/torch-latest.whl
-
-          echo "⬇️ Downloading cuDNN tarball..."
-          wget -O llm/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn.tar.xz
-
-          echo "✅ Files downloaded:"
-          ls -lh llm/
+      - name: ✅ Skip manual downloads – now handled in Dockerfile
+        run: echo "Files handled via Dockerfile GitHub Releases. Skipping manual downloads."
 
       - name: 🛠️ Set up Fly CLI
         uses: superfly/flyctl-actions/setup-flyctl@master

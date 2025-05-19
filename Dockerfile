@@ -48,8 +48,8 @@ RUN pip install \
 RUN wget -O /tmp/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl https://files-public.desknav.ai/llm/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl && \
     pip install --no-deps /tmp/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl
 
-# ✅ cuDNN
-RUN wget -O /tmp/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn-latest.tar.xz && \
+# ✅ cuDNN with retry
+RUN for i in 1 2 3 4 5; do wget -O /tmp/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn-latest.tar.xz && break || sleep 5; done && \
     tar -xf /tmp/cudnn.tar.xz -C /tmp && \
     CUDNN_DIR=$(find /tmp -type d -name "cudnn-linux-x86_64*" | head -n 1) && \
     cp -P "$CUDNN_DIR/include/"* /usr/include/ && \

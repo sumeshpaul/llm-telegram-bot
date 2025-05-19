@@ -29,6 +29,13 @@ output/
 .cache/
 *.tar
 *.tar.gz
+llm/
+*.whl
+*.tar.xz
+torch-*.whl
+cudnn-*.tar.xz
+*.gguf
+data/
 
 # Safe to exclude globally
 /root/.cache/

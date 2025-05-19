@@ -7,9 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: �� Build & Deploy to Fly.io
     runs-on: ubuntu-latest
-
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
@@ -39,4 +37,3 @@ jobs:
           GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
           API_KEY: ${{ secrets.API_KEY }}
         run: flyctl deploy --remote-only
-# Trigger test

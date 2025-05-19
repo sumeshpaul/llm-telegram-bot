@@ -45,8 +45,8 @@ RUN pip install \
         tiktoken
 
 # ✅ PyTorch (5080 compatible)
-RUN wget -O /tmp/torch-2.8.0a0+git08f5371-cp310-cp310-linux_x86_64.whl https://files-public.desknav.ai/llm/torch-latest.whl && \
-    pip install --no-deps /tmp/torch-2.8.0a0+git08f5371-cp310-cp310-linux_x86_64.whl
+RUN wget -O /tmp/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl https://files-public.desknav.ai/llm/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl && \
+    pip install --no-deps /tmp/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl
 
 # ✅ cuDNN
 RUN wget -O /tmp/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn-latest.tar.xz && \

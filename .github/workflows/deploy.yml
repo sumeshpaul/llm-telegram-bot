@@ -7,25 +7,24 @@ on:
 
 jobs:
   deploy:
+    name: Deploy app to Fly.io
     runs-on: ubuntu-latest
+
     steps:
-      - name: ⬇️ Checkout repository
-        uses: actions/checkout@v3
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-      - name: 📁 Create directory for torch & cudnn
-        run: mkdir -p llm
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: ✅ Skip manual downloads – now handled in Dockerfile
-        run: echo "Files handled via Dockerfile GitHub Releases. Skipping manual downloads."
-
-      - name: 🛠️ Set up Fly CLI
+      - name: 🔑 Fly.io Auth
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: 🚀 Deploy to Fly.io
+        run: flyctl deploy --remote-only --app llm-telegram-bot
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
           API_KEY: ${{ secrets.API_KEY }}
-        run: flyctl deploy --remote-only --primary-region ams

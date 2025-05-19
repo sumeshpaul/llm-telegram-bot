@@ -1,10 +1,7 @@
-# Base Image
 FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
 
-# Metadata
 LABEL maintainer="sumesh@meledath.me"
 
-# Core Environment
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
     TOKENIZERS_PARALLELISM=false \
@@ -15,7 +12,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LDFLAGS="-mcmodel=large" \
     TRANSFORMERS_CACHE=/app/.cache/huggingface
 
-# System + Python + GCC 13
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
     add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
@@ -31,10 +27,8 @@ RUN apt-get update && \
     ln -sf /usr/bin/pip3 /usr/bin/pip && \
     rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip
 RUN pip install --upgrade pip
 
-# Python packages
 RUN pip install \
         typing_extensions \
         pyyaml \
@@ -47,7 +41,6 @@ RUN pip install \
 RUN wget https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl && \
     pip install --no-deps torch-2.8.0a0-cp310-cp310-linux_x86_64.whl
 
-# ✅ cuDNN from GitHub Releases
 RUN wget https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/cudnn-latest.tar.xz && \
     tar -xf cudnn-latest.tar.xz -C /tmp && \
     CUDNN_DIR=$(find /tmp -type d -name "cudnn-linux-x86_64*" | head -n 1) && \
@@ -57,7 +50,6 @@ RUN wget https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/c
     ldconfig && \
     rm -rf /tmp/cudnn*
 
-# bitsandbytes build
 WORKDIR /opt
 RUN git clone https://github.com/bitsandbytes-foundation/bitsandbytes.git bnb
 WORKDIR /opt/bnb
@@ -65,15 +57,12 @@ RUN cmake -DCOMPUTE_BACKEND=cuda -S . && \
     make -j$(nproc) && \
     pip install -e .
 
-# Copy app
 COPY . /app
 WORKDIR /app
 
-# Install app dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install pymupdf python-docx sentencepiece python-multipart
 RUN pip install gradio
 
-# Finalize
 RUN chmod +x /app/start.sh
 CMD ["bash", "./start.sh"]

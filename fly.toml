@@ -19,5 +19,5 @@ primary_region = 'ams'
 
 [vm]
   memory = '4096'
-  cpu_kind = 'shared'
+  cpu_kind = 'performance'
   cpus = 2

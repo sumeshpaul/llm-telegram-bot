@@ -21,3 +21,7 @@ primary_region = 'ams'
   memory = '4096'
   cpu_kind = 'performance'
   cpus = 2
+
+[mounts]
+  source = "model_data"
+  destination = "/mnt/models"

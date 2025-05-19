@@ -44,9 +44,9 @@ RUN pip install \
         sentence-transformers \
         tiktoken
 
-# ✅ PyTorch for RTX 5080
-RUN wget -O /tmp/torch.whl https://files-public.desknav.ai/llm/torch-latest.whl && \
-    pip install --no-deps /tmp/torch.whl
+# ✅ PyTorch (5080 compatible)
+RUN wget -O /tmp/torch-2.8.0a0+git08f5371-cp310-cp310-linux_x86_64.whl https://files-public.desknav.ai/llm/torch-latest.whl && \
+    pip install --no-deps /tmp/torch-2.8.0a0+git08f5371-cp310-cp310-linux_x86_64.whl
 
 # ✅ cuDNN
 RUN wget -O /tmp/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn-latest.tar.xz && \

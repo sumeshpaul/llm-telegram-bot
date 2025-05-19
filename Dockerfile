@@ -44,13 +44,13 @@ RUN pip install \
         sentence-transformers \
         tiktoken
 
-# ✅ PyTorch (from GitHub Release)
-RUN wget -O /tmp/torch.whl https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/torch-latest.whl && \
-    pip install --no-deps /tmp/torch.whl
+# ✅ PyTorch from GitHub Releases
+RUN wget https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/torch-latest.whl && \
+    pip install --no-deps torch-latest.whl
 
-# ✅ cuDNN (from GitHub Release)
-RUN wget -O /tmp/cudnn.tar.xz https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/cudnn-latest.tar.xz && \
-    tar -xf /tmp/cudnn.tar.xz -C /tmp && \
+# ✅ cuDNN from GitHub Releases
+RUN wget https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/cudnn-latest.tar.xz && \
+    tar -xf cudnn-latest.tar.xz -C /tmp && \
     CUDNN_DIR=$(find /tmp -type d -name "cudnn-linux-x86_64*" | head -n 1) && \
     cp -P "$CUDNN_DIR/include/"* /usr/include/ && \
     cp -P "$CUDNN_DIR/lib/"* /usr/lib/x86_64-linux-gnu/ && \

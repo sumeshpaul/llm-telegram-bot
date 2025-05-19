@@ -44,9 +44,8 @@ RUN pip install \
         sentence-transformers \
         tiktoken
 
-# ✅ PyTorch from GitHub Releases
-RUN wget https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/torch-latest.whl && \
-    pip install --no-deps torch-latest.whl
+RUN wget https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/torch-2.8.0a0-cp310-cp310-linux_x86_64.whl && \
+    pip install --no-deps torch-2.8.0a0-cp310-cp310-linux_x86_64.whl
 
 # ✅ cuDNN from GitHub Releases
 RUN wget https://github.com/sumeshpaul/llm-telegram-bot/releases/download/v1.0/cudnn-latest.tar.xz && \

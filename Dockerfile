@@ -44,12 +44,12 @@ RUN pip install \
         sentence-transformers \
         tiktoken
 
-# ✅ Download 5080-compatible PyTorch wheel from public URL
-RUN wget -O /tmp/torch.whl https://files-public.desknav.ai/llm/torch-final-5080.whl && \
+# ✅ PyTorch for RTX 5080
+RUN wget -O /tmp/torch.whl https://files-public.desknav.ai/llm/torch-latest.whl && \
     pip install --no-deps /tmp/torch.whl
 
-# ✅ Download cuDNN tarball securely over HTTPS
-RUN wget -O /tmp/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn.tar.xz && \
+# ✅ cuDNN
+RUN wget -O /tmp/cudnn.tar.xz https://files-public.desknav.ai/llm/cudnn-latest.tar.xz && \
     tar -xf /tmp/cudnn.tar.xz -C /tmp && \
     CUDNN_DIR=$(find /tmp -type d -name "cudnn-linux-x86_64*" | head -n 1) && \
     cp -P "$CUDNN_DIR/include/"* /usr/include/ && \

@@ -33,7 +33,7 @@ load_dotenv()
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 API_KEY = os.getenv("API_KEY", "DESKNAV-AI-2025-SECURE")
-LLM_MODEL_PATH = "./final_lora_model_v2"
+LLM_MODEL_PATH = "/mnt/models/final_lora_model"
 BASE_MODEL_PATH = "NousResearch/Nous-Hermes-2-Mistral-7B-DPO"
 DB_PATH = "./data/query_logs.db"
 UPLOAD_DIR = Path("./rag_data/uploads")
